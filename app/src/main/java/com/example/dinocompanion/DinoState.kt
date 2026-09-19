@@ -46,4 +46,39 @@ class DinoState(context: Context) {
     var overlayEnabled: Boolean
         get() = prefs.getBoolean("overlay_enabled", false)
         set(value) = prefs.edit().putBoolean("overlay_enabled", value).apply()
+    var notificationsEnabled: Boolean
+        get() = prefs.getBoolean("notifications_enabled", true)
+        set(value) = prefs.edit().putBoolean("notifications_enabled", value).apply()
+
+    var batteryReactions: Boolean
+        get() = prefs.getBoolean("battery_reactions", true)
+        set(value) = prefs.edit().putBoolean("battery_reactions", value).apply()
+
+    var keyboardCompanion: Boolean
+        get() = prefs.getBoolean("keyboard_companion", true)
+        set(value) = prefs.edit().putBoolean("keyboard_companion", value).apply()
+
+    var soundEnabled: Boolean
+        get() = prefs.getBoolean("sound_enabled", true)
+        set(value) = prefs.edit().putBoolean("sound_enabled", value).apply()
+
+    var lastSimulationTime: Long
+        get() = prefs.getLong("last_simulation_time", System.currentTimeMillis())
+        set(value) = prefs.edit().putLong("last_simulation_time", value).apply()
+
+    fun simulateTimePassage(now: Long = System.currentTimeMillis()) {
+        val last = lastSimulationTime
+        if (last <= 0L) {
+            lastSimulationTime = now
+            return
+        }
+        val hours = ((now - last).coerceAtLeast(0L) / 3_600_000L).coerceAtMost(72L)
+        if (hours > 0L) {
+            hunger -= hours * 1.2f
+            happiness -= hours * 0.8f
+            cleanliness -= hours * 0.6f
+            energy += hours * 0.35f
+            lastSimulationTime = now
+        }
+    }
 }
