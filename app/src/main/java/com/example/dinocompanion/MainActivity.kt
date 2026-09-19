@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         state = DinoState(this)
+        state.simulateTimePassage()
         wireNavigation()
         wireHome()
         wireCare()
@@ -122,15 +123,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun wireSettings() {
         binding.settingOverlay.setOnClickListener { toggleOverlay() }
-        binding.settingNotifications.setOnClickListener { dinoReaction("Notifications are enabled for Dino reactions.") }
-        binding.settingBattery.setOnClickListener { toggleText(binding.settingBattery, "Battery reactions") }
-        binding.settingKeyboard.setOnClickListener { toggleText(binding.settingKeyboard, "Keyboard companion") }
-        binding.settingSound.setOnClickListener { toggleText(binding.settingSound, "Sound & voice") }
-    }
-
-    private fun toggleText(view: android.widget.TextView, label: String) {
-        val isOn = view.text.toString().endsWith("ON")
-        view.text = "$label     ${if (isOn) "OFF" else "ON"}"
+        binding.settingNotifications.setOnClickListener {
+            state.notificationsEnabled = !state.notificationsEnabled
+            dinoReaction("Notifications " + if (state.notificationsEnabled) "enabled." else "disabled.")
+        }
+        binding.settingBattery.setOnClickListener {
+            state.batteryReactions = !state.batteryReactions
+            dinoReaction("Battery reactions " + if (state.batteryReactions) "enabled." else "disabled.")
+        }
+        binding.settingKeyboard.setOnClickListener {
+            state.keyboardCompanion = !state.keyboardCompanion
+            dinoReaction("Keyboard companion " + if (state.keyboardCompanion) "enabled." else "disabled.")
+        }
+        binding.settingSound.setOnClickListener {
+            state.soundEnabled = !state.soundEnabled
+            dinoReaction("Sound & voice " + if (state.soundEnabled) "enabled." else "disabled.")
+        }
     }
 
     private fun selectDino(type: String, cost: Int) {
@@ -270,6 +278,10 @@ class MainActivity : AppCompatActivity() {
         binding.txtDinoPageType.text = "${state.dinoType} • Stage ${state.stage}"
         binding.txtCareGreeting.text = "${state.dinoName} is waiting for you!"
         binding.settingOverlay.text = "Floating Dino     ${if (state.overlayEnabled) "ON" else "OFF"}"
+        binding.settingNotifications.text = "Notifications     " + if (state.notificationsEnabled) "ON" else "OFF"
+        binding.settingBattery.text = "Battery reactions     " + if (state.batteryReactions) "ON" else "OFF"
+        binding.settingKeyboard.text = "Keyboard companion     " + if (state.keyboardCompanion) "ON" else "OFF"
+        binding.settingSound.text = "Sound & voice     " + if (state.soundEnabled) "ON" else "OFF"
         val type = state.dinoType
         binding.selectTRex.text = "🦖\nT-Rex\n${if (type == "T-Rex") "Selected" else "300 coins"}"
         binding.selectTriceratops.text = "🦕\nTriceratops\n${if (type == "Triceratops") "Selected" else "300 coins"}"
