@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block;background:transparent}</style>
+</head><body><canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'), gl=c.getContext('webgl',{alpha:true,antialias:true});
+const q=new URLSearchParams(location.search), type=q.get('type')||'T-Rex', stage=+(q.get('stage')||1);
+const vs='attribute vec3 p;attribute vec3 n;uniform mat4 mvp;uniform mat4 model;varying vec3 vN;void main(){vN=mat3(model)*n;gl_Position=mvp*vec4(p,1.0);}';
+const fs='precision mediump float;varying vec3 vN;uniform vec4 col;void main(){vec3 L=normalize(vec3(-.4,.8,1.0));float d=max(.25,dot(normalize(vN),L));gl_FragColor=vec4(col.rgb*d,col.a);}';
+function sh(t,s){let x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);return x}
+const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);
+const P=gl.getAttribLocation(pr,'p'),N=gl.getAttribLocation(pr,'n'),M=gl.getUniformLocation(pr,'mvp'),MD=gl.getUniformLocation(pr,'model'),CO=gl.getUniformLocation(pr,'col');
+function sphere(seg=18,rings=12){let v=[],n=[],i=[];for(let y=0;y<=rings;y++){let a=y*Math.PI/rings,sy=Math.cos(a),sr=Math.sin(a);for(let x=0;x<=seg;x++){let b=x*2*Math.PI/seg,px=sr*Math.cos(b),pz=sr*Math.sin(b);v.push(px,sy,pz);n.push(px,sy,pz)}}for(let y=0;y<rings;y++)for(let x=0;x<seg;x++){let a=y*(seg+1)+x,b=a+seg+1;i.push(a,b,a+1,b,b+1,a+1)}return mesh(v,n,i)}
+function box(){let v=[-1,-1,-1,1,-1,-1,1,1,-1,-1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1],n=[0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,1,0,0,1,0,0,1,0,0,1],i=[0,1,2,0,2,3,4,6,5,4,7,6,0,4,5,0,5,1,3,2,6,3,6,7,1,5,6,1,6,2,0,3,7,0,7,4];return mesh(v,n,i)}
+function mesh(v,n,i){let o={v:gl.createBuffer(),n:gl.createBuffer(),i:gl.createBuffer(),len:i.length};gl.bindBuffer(gl.ARRAY_BUFFER,o.v);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(v),gl.STATIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,o.n);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(n),gl.STATIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,o.i);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(i),gl.STATIC_DRAW);return o}
+const S=sphere(),B=box();
+function I(){return [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}
+function mul(a,b){let o=new Array(16);for(let r=0;r<4;r++)for(let k=0;k<4;k++)for(let j=0;j<4;j++)o[r*4+j]=(o[r*4+j]||0)+a[r*4+k]*b[k*4+j];return o}
+function T(x,y,z){let m=I();m[12]=x;m[13]=y;m[14]=z;return m}
+function Sc(x,y,z){let m=I();m[0]=x;m[5]=y;m[10]=z;return m}
+function Ry(a){let m=I(),c=Math.cos(a),s=Math.sin(a);m[0]=c;m[2]=-s;m[8]=s;m[10]=c;return m}
+function Rx(a){let m=I(),c=Math.cos(a),s=Math.sin(a);m[5]=c;m[6]=s;m[9]=-s;m[10]=c;return m}
+function persp(f,a,n,z){let t=1/Math.tan(f/2),m=new Array(16).fill(0);m[0]=t/a;m[5]=t;m[10]=(z+n)/(n-z);m[11]=-1;m[14]=2*z*n/(n-z);return m}
+function draw(o,model,color,scale){gl.bindBuffer(gl.ARRAY_BUFFER,o.v);gl.vertexAttribPointer(P,3,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(P);gl.bindBuffer(gl.ARRAY_BUFFER,o.n);gl.vertexAttribPointer(N,3,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(N);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,o.i);gl.uniformMatrix4fv(MD,false,new Float32Array(model));gl.uniformMatrix4fv(M,false,new Float32Array(mul(V,mul(model,Sc(scale,scale,scale)))));gl.uniform4fv(CO,new Float32Array(color));gl.drawElements(gl.TRIANGLES,o.len,gl.UNSIGNED_SHORT,0)}
+let V=I();
+function part(x,y,z,sx,sy,sz,col,rot=0){draw(S,mul(T(x,y,z),Ry(rot)),col,1);gl.uniformMatrix4fv(M,false,new Float32Array(mul(V,mul(mul(T(x,y,z),Ry(rot)),Sc(sx,sy,sz)))));gl.uniformMatrix4fv(MD,false,new Float32Array(mul(T(x,y,z),Ry(rot))));gl.uniform4fv(CO,new Float32Array(col));gl.bindBuffer(gl.ARRAY_BUFFER,S.v);gl.vertexAttribPointer(P,3,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(P);gl.bindBuffer(gl.ARRAY_BUFFER,S.n);gl.vertexAttribPointer(N,3,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(N);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,S.i);gl.drawElements(gl.TRIANGLES,S.len,gl.UNSIGNED_SHORT,0)}
+function cube(x,y,z,sx,sy,sz,col,rot=0){let model=mul(T(x,y,z),mul(Ry(rot),Sc(sx,sy,sz)));draw(B,model,col,1)}
+function render(t){let dpr=devicePixelRatio||1,w=c.clientWidth*dpr,h=c.clientHeight*dpr;if(c.width!==w||c.height!==h){c.width=w;c.height=h;gl.viewport(0,0,w,h)}gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.useProgram(pr);
+let bob=Math.sin(t*.002)*.07, turn=Math.sin(t*.0007)*.18, V0=mul(T(0,-.05,-4.1),Rx(-.08));V=mul(persp(.85,w/h,.1,20),V0);
+let colors={ 'T-Rex':[.18,.78,.30,1], 'Triceratops':[.63,.40,.92,1], 'Pterodactyl':[.20,.72,.82,1], 'Stegosaurus':[.94,.42,.22,1]};let col=colors[type]||colors['T-Rex'], belly=[Math.min(1,col[0]+.28),Math.min(1,col[1]+.22),Math.min(1,col[2]+.18),1];let sc=.72+stage*.08;
+part(0,.35+bob,0,1.0*sc,.9*sc,.8*sc,col,turn);part(0,1.05+bob,-.12,.62*sc,.62*sc,.62*sc,col,turn);
+part(-.42,-.42,.05,.25*sc,.55*sc,.35*sc,col,0);part(.42,-.42,.05,.25*sc,.55*sc,.35*sc,col,0);
+part(-.23,-.76,.04,.32*sc,.16*sc,.45*sc,col,0);part(.23,-.76,.04,.32*sc,.16*sc,.45*sc,col,0);
+part(0,.32,.67,.55*sc,.45*sc,.25*sc,belly,0);part(0,1.02,.43,.47*sc,.48*sc,.36*sc,col,0);
+part(-.18,1.14,.72,.11*sc,.11*sc,.07*sc,[1,1,1,1],0);part(.18,1.14,.72,.11*sc,.11*sc,.07*sc,[1,1,1,1],0);
+part(-.18,1.14,.79,.045*sc,.06*sc,.035*sc,[.04,.05,.08,1],0);part(.18,1.14,.79,.045*sc,.06*sc,.035*sc,[.04,.05,.08,1],0);
+cube(0,.87,.82,.32*sc,.09*sc,.07*sc,[.08,.07,.08,1],0);
+for(let i=0;i<3;i++)part((i-1)*.28,.8,.55,.08*sc,.18*sc,.08*sc,[1,.75,.18,1],0);
+part(0,.1,-.7,.25*sc,.25*sc,.9*sc,col,0);
+if(type==='Triceratops'){for(let i=0;i<3;i++)part((i-1)*.28,1.43,.62,.07*sc,.22*sc,.07*sc,[.95,.85,.55,1],0)}
+if(type==='Pterodactyl'){part(-.9,.9,0,.8*sc,.12*sc,.5*sc,col,-.25);part(.9,.9,0,.8*sc,.12*sc,.5*sc,col,.25)}
+if(type==='Stegosaurus'){for(let i=0;i<6;i++)part((i-2.5)*.25,1.0,-.25,.1*sc,.24*sc,.06*sc,[1,.72,.28,1],0)}
+requestAnimationFrame(render)}requestAnimationFrame(render);
+</script></body></html>
