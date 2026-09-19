@@ -310,6 +310,8 @@ class MainActivity : AppCompatActivity() {
     private fun configure3dView(view: WebView) {
         view.settings.javaScriptEnabled = true
         view.settings.domStorageEnabled = false
+        view.settings.allowFileAccess = true
+        view.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         view.setBackgroundColor(Color.TRANSPARENT)
         view.isVerticalScrollBarEnabled = false
         view.isHorizontalScrollBarEnabled = false
