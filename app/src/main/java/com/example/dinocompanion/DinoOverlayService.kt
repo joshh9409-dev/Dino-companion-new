@@ -32,14 +32,16 @@ class DinoOverlayService : Service() {
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == Intent.ACTION_BATTERY_LOW) {
+            if (intent?.action == Intent.ACTION_BATTERY_LOW && DinoState(this@DinoOverlayService).batteryReactions) {
                 dinoView?.animate()?.scaleX(0.86f)?.scaleY(0.86f)?.setDuration(250)?.withEndAction {
                     dinoView?.animate()?.scaleX(1.18f)?.scaleY(1.18f)?.setDuration(350)?.withEndAction {
                         dinoView?.animate()?.scaleX(1f)?.scaleY(1f)?.setDuration(350)?.start()
                     }?.start()
                 }?.start()
-                getSystemService(NotificationManager::class.java)
-                    .notify(NOTIFICATION_ID, buildNotification("Battery is low. Your Dino is getting sleepy."))
+                if (DinoState(this@DinoOverlayService).notificationsEnabled) {
+                    getSystemService(NotificationManager::class.java)
+                        .notify(NOTIFICATION_ID, buildNotification("Battery is low. Your Dino is getting sleepy."))
+                }
             }
         }
     }
