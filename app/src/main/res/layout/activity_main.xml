@@ -1,145 +1,894 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_screen">
-    <LinearLayout
+
+    <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DINO COMPANION"
-            android:textColor="@color/white"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your little prehistoric friend"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:paddingBottom="92dp"
+        android:clipToPadding="false">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_card_rounded"
-            android:gravity="center"
             android:orientation="vertical"
-            android:padding="20dp">
-            <ImageView
-                android:layout_width="180dp"
-                android:layout_height="180dp"
-                android:contentDescription="Dino"
-                android:src="@drawable/dino_placeholder" />
-            <TextView
-                android:id="@+id/txtDinoName"
-                android:layout_width="wrap_content"
+            android:padding="18dp">
+
+            <!-- HOME -->
+            <LinearLayout
+                android:id="@+id/pageHome"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Rex"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/txtDinoType"
-                android:layout_width="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DINO COMPANION"
+                            android:textColor="@color/white"
+                            android:textSize="27sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Your little prehistoric friend"
+                            android:textColor="#AFC8F4"
+                            android:textSize="13sp"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/btnSettingsTop"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_bubble_circle"
+                        android:gravity="center"
+                        android:text="⚙"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_card_rounded"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/txtXp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="1,450 XP"
+                            android:textColor="#DCEAFF"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:id="@+id/txtCoins"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_chip"
+                            android:paddingStart="12dp"
+                            android:paddingTop="6dp"
+                            android:paddingEnd="12dp"
+                            android:paddingBottom="6dp"
+                            android:text="● 250"
+                            android:textColor="#FFD95A"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imgHomeDino"
+                        android:layout_width="205dp"
+                        android:layout_height="205dp"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="Your dinosaur"
+                        android:src="@drawable/dino_placeholder"/>
+
+                    <TextView
+                        android:id="@+id/txtDinoName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rex"
+                        android:textColor="@color/white"
+                        android:textSize="27sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/txtDinoType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T-Rex • Baby"
+                        android:textColor="#AFC8F4"
+                        android:textSize="13sp"/>
+
+                    <TextView
+                        android:id="@+id/txtStage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Stage 1 • 45% to next evolution"
+                        android:textColor="#DCEAFF"
+                        android:textSize="12sp"/>
+
+                    <ProgressBar
+                        android:id="@+id/progressEvolution"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="7dp"
+                        android:max="100"
+                        android:progress="45"
+                        android:progressTint="#FFD24A"/>
+
+                    <TextView
+                        android:id="@+id/btnOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/bg_button_primary"
+                        android:gravity="center"
+                        android:text="●  START FLOATING DINO"
+                        android:textColor="#08251A"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="What do you want to do?"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/btnCareHome"
+                        android:layout_width="0dp"
+                        android:layout_height="86dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_bubble_circle"
+                        android:gravity="center"
+                        android:text="🍖
+Food &amp; Care"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                    <TextView
+                        android:id="@+id/btnRename"
+                        android:layout_width="0dp"
+                        android:layout_height="86dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_bubble_circle"
+                        android:gravity="center"
+                        android:text="✎
+Rename"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                    <TextView
+                        android:id="@+id/btnChoose"
+                        android:layout_width="0dp"
+                        android:layout_height="86dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_bubble_circle"
+                        android:gravity="center"
+                        android:text="🦖
+Choose"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/btnShopHome"
+                        android:layout_width="0dp"
+                        android:layout_height="86dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_bubble_circle"
+                        android:gravity="center"
+                        android:text="🪙
+Shop"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                    <TextView
+                        android:id="@+id/btnDinoHome"
+                        android:layout_width="0dp"
+                        android:layout_height="86dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_bubble_circle"
+                        android:gravity="center"
+                        android:text="🦕
+My Dino"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                    <TextView
+                        android:id="@+id/btnSettingsHome"
+                        android:layout_width="0dp"
+                        android:layout_height="86dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_bubble_circle"
+                        android:gravity="center"
+                        android:text="⚙
+Settings"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_card_rounded"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dino status"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/txtHunger"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Hunger     85%"
+                        android:textColor="#DCEAFF"/>
+                    <ProgressBar
+                        android:id="@+id/progressHunger"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:max="100"
+                        android:progress="85"
+                        android:progressTint="#FFB84D"/>
+                    <TextView
+                        android:id="@+id/txtHappiness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="9dp"
+                        android:text="Happiness  90%"
+                        android:textColor="#DCEAFF"/>
+                    <ProgressBar
+                        android:id="@+id/progressHappiness"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:max="100"
+                        android:progress="90"
+                        android:progressTint="#52E39A"/>
+                    <TextView
+                        android:id="@+id/txtClean"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="9dp"
+                        android:text="Cleanliness 80%"
+                        android:textColor="#DCEAFF"/>
+                    <ProgressBar
+                        android:id="@+id/progressClean"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:max="100"
+                        android:progress="80"
+                        android:progressTint="#62D7FF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- DINO -->
+            <LinearLayout
+                android:id="@+id/pageDino"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="T-Rex"
-                android:textColor="@color/white" />
-            <TextView
-                android:id="@+id/txtStage"
-                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/btnBackDino"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:text="‹  My Dino"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card_rounded"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <ImageView
+                        android:id="@+id/imgDinoPage"
+                        android:layout_width="210dp"
+                        android:layout_height="210dp"
+                        android:src="@drawable/dino_placeholder"
+                        android:contentDescription="Selected dinosaur"/>
+                    <TextView
+                        android:id="@+id/txtDinoPageName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rex"
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/txtDinoPageType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T-Rex"
+                        android:textColor="#AFC8F4"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Choose your dinosaur"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/selectTRex"
+                        android:layout_width="0dp"
+                        android:layout_height="105dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="🦖
+T-Rex
+Selected"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/selectTriceratops"
+                        android:layout_width="0dp"
+                        android:layout_height="105dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="🦕
+Triceratops
+Unlock"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:clickable="true"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/selectPtero"
+                        android:layout_width="0dp"
+                        android:layout_height="105dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="🪽
+Pterodactyl
+Unlock"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/selectStego"
+                        android:layout_width="0dp"
+                        android:layout_height="105dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="🦕
+Stegosaurus
+Unlock"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:clickable="true"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/btnRenameDino"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_button_primary"
+                    android:gravity="center"
+                    android:text="RENAME MY DINO"
+                    android:textColor="#08251A"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+            </LinearLayout>
+
+            <!-- CARE -->
+            <LinearLayout
+                android:id="@+id/pageCare"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Stage 3"
-                android:textColor="@color/white" />
-            <TextView
-                android:id="@+id/txtXp"
-                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/btnBackCare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:text="‹  Food &amp; Care"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <ImageView
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/dino_placeholder"
+                    android:contentDescription="Happy dinosaur"/>
+                <TextView
+                    android:id="@+id/txtCareGreeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Rex is waiting for you!"
+                    android:textColor="@color/white"
+                    android:textSize="21sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="4dp"
+                    android:text="Keep your companion full, happy and clean."
+                    android:textColor="#AFC8F4"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/careFeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center_vertical"
+                        android:padding="18dp"
+                        android:text="🍖   Feed Dino        +12 Hunger"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/carePlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center_vertical"
+                        android:padding="18dp"
+                        android:text="🏖   Play Together     +12 Happiness"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/careClean"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center_vertical"
+                        android:padding="18dp"
+                        android:text="🧼   Clean Dino         +15 Cleanliness"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/careSleep"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center_vertical"
+                        android:padding="18dp"
+                        android:text="💤   Let Dino Sleep     +20 Energy"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:clickable="true"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SHOP -->
+            <LinearLayout
+                android:id="@+id/pageShop"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="XP 1450"
-                android:textColor="@color/white" />
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/btnBackShop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:text="‹  Shop"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card_rounded"
+                    android:padding="14dp"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Dino Coins"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/txtCoinsShop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="● 250"
+                        android:textColor="#FFD95A"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Care items"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/shopFood"
+                        android:layout_width="0dp"
+                        android:layout_height="130dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="🍖
+Food Pack
+100 coins"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/shopToy"
+                        android:layout_width="0dp"
+                        android:layout_height="130dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="⚽
+Toy Pack
+100 coins"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/shopCare"
+                        android:layout_width="0dp"
+                        android:layout_height="130dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="🧼
+Care Pack
+100 coins"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:clickable="true"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Dino eggs"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/shopRareEgg"
+                        android:layout_width="0dp"
+                        android:layout_height="135dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="🥚
+Rare Egg
+300 coins"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/shopEpicEgg"
+                        android:layout_width="0dp"
+                        android:layout_height="135dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_secondary"
+                        android:gravity="center"
+                        android:text="🥚
+Epic Egg
+500 coins"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/shopCoins"
+                        android:layout_width="0dp"
+                        android:layout_height="135dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_primary"
+                        android:gravity="center"
+                        android:text="●
+Get Coins
++500"
+                        android:textColor="#08251A"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:clickable="true"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SETTINGS -->
+            <LinearLayout
+                android:id="@+id/pageSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/btnBackSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:text="‹  Settings"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Companion settings"
+                    android:textColor="#AFC8F4"
+                    android:textSize="13sp"/>
+                <TextView
+                    android:id="@+id/settingOverlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="68dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_button_secondary"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:text="Floating Dino     OFF"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <TextView
+                    android:id="@+id/settingNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="68dp"
+                    android:layout_marginTop="9dp"
+                    android:background="@drawable/bg_button_secondary"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:text="Notifications     ON"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <TextView
+                    android:id="@+id/settingBattery"
+                    android:layout_width="match_parent"
+                    android:layout_height="68dp"
+                    android:layout_marginTop="9dp"
+                    android:background="@drawable/bg_button_secondary"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:text="Battery reactions     ON"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <TextView
+                    android:id="@+id/settingKeyboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="68dp"
+                    android:layout_marginTop="9dp"
+                    android:background="@drawable/bg_button_secondary"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:text="Keyboard companion     ON"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <TextView
+                    android:id="@+id/settingSound"
+                    android:layout_width="match_parent"
+                    android:layout_height="68dp"
+                    android:layout_marginTop="9dp"
+                    android:background="@drawable/bg_button_secondary"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:text="Sound &amp; voice     ON"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:clickable="true"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_card_rounded"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dino Companion"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Version 1.0 • Built for Android"
+                        android:textColor="#AFC8F4"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="A living companion that stays with you."
+                        android:textColor="#DCEAFF"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Dino Stats"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/txtHunger"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="85%"
-            android:textColor="@color/white" />
-        <ProgressBar
-            android:id="@+id/progressHunger"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="12dp"
-            android:max="100"
-            android:progress="85" />
-        <TextView
-            android:id="@+id/txtHappiness"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="90%"
-            android:textColor="@color/white" />
-        <ProgressBar
-            android:id="@+id/progressHappiness"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="12dp"
-            android:max="100"
-            android:progress="90" />
-        <TextView
-            android:id="@+id/txtClean"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="80%"
-            android:textColor="@color/white" />
-        <ProgressBar
-            android:id="@+id/progressClean"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="12dp"
-            android:max="100"
-            android:progress="80" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btnFeed"
-                android:layout_width="0dp"
-                android:layout_height="52dp"
-                android:layout_weight="1"
-                android:text="Feed" />
-            <Button
-                android:id="@+id/btnPlay"
-                android:layout_width="0dp"
-                android:layout_height="52dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="Play" />
-            <Button
-                android:id="@+id/btnClean"
-                android:layout_width="0dp"
-                android:layout_height="52dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="Clean" />
-        </LinearLayout>
-        <Button
-            android:id="@+id/btnOverlay"
-            android:layout_width="match_parent"
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginTop="12dp"
-            android:text="Start Floating Dino"
-            android:textStyle="bold" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="⌂
+Home"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:clickable="true"/>
+        <TextView
+            android:id="@+id/navDino"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="🦖
+Dino"
+            android:textColor="#9FB7DD"
+            android:textSize="11sp"
+            android:clickable="true"/>
+        <TextView
+            android:id="@+id/navCare"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="♡
+Care"
+            android:textColor="#9FB7DD"
+            android:textSize="11sp"
+            android:clickable="true"/>
+        <TextView
+            android:id="@+id/navShop"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="●
+Shop"
+            android:textColor="#9FB7DD"
+            android:textSize="11sp"
+            android:clickable="true"/>
     </LinearLayout>
-</ScrollView>
+</FrameLayout>
