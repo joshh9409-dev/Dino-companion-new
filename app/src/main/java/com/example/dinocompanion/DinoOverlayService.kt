@@ -71,6 +71,8 @@ class DinoOverlayService : Service() {
         val s = DinoState(this)
         val dino = WebView(this).apply {
             settings.javaScriptEnabled = true
+            settings.allowFileAccess = true
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
             setBackgroundColor(Color.TRANSPARENT)
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false
