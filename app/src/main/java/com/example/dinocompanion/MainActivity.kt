@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var state: DinoState
     private var dinoAnimator: ObjectAnimator? = null
+    private var waitingForOverlayPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,10 @@ class MainActivity : AppCompatActivity() {
         if (::binding.isInitialized && ::state.isInitialized) {
             render()
             startDinoAnimation()
+            if (waitingForOverlayPermission && Settings.canDrawOverlays(this)) {
+                waitingForOverlayPermission = false
+                startFloatingDino()
+            }
         }
     }
 
@@ -220,8 +225,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun toggleOverlay() {
         if (!Settings.canDrawOverlays(this)) {
+            waitingForOverlayPermission = true
             startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
-            dinoReaction("Allow Dino Companion to appear over other apps, then return here.")
+            dinoReaction("Allow the overlay permission. Dino Companion will start automatically when you return.")
             return
         }
         if (state.overlayEnabled) {
@@ -229,11 +235,19 @@ class MainActivity : AppCompatActivity() {
             state.overlayEnabled = false
             dinoReaction("Floating Dino hidden.")
         } else {
-            if (Build.VERSION.SDK_INT >= 33) requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 42)
-            ContextCompat.startForegroundService(this, Intent(this, DinoOverlayService::class.java))
-            state.overlayEnabled = true
-            dinoReaction("Floating Dino is now on.")
+            startFloatingDino()
         }
+        render()
+    }
+
+    private fun startFloatingDino() {
+        if (Build.VERSION.SDK_INT >= 33 &&
+            androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 42)
+        }
+        ContextCompat.startForegroundService(this, Intent(this, DinoOverlayService::class.java))
+        state.overlayEnabled = true
+        dinoReaction("Your 3D Dino is now floating over your apps.")
         render()
     }
 
