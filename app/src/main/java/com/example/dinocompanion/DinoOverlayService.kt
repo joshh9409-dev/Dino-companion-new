@@ -18,7 +18,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
-import android.widget.ImageView
+import android.webkit.WebView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
@@ -27,7 +27,7 @@ import androidx.core.app.ServiceCompat
 class DinoOverlayService : Service() {
     private lateinit var windowManager: WindowManager
     private var overlayView: View? = null
-    private var dinoView: ImageView? = null
+    private var dinoView: WebView? = null
     private var idleRunning = false
 
     private val batteryReceiver = object : BroadcastReceiver() {
@@ -68,18 +68,14 @@ class DinoOverlayService : Service() {
         if (overlayView != null) return
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         val root = FrameLayout(this).apply { setPadding(4, 4, 4, 4) }
-        val dino = ImageView(this).apply {
-            setImageResource(
-                when (DinoState(this@DinoOverlayService).dinoType) {
-                    "Triceratops" -> R.drawable.dino_triceratops
-                    "Pterodactyl" -> R.drawable.dino_pterodactyl
-                    "Stegosaurus" -> R.drawable.dino_stegosaurus
-                    else -> R.drawable.dino_trex
-                }
-            )
-            contentDescription = "Dino Companion"
-            setPadding(7, 7, 7, 7)
-            setBackgroundResource(R.drawable.bg_bubble_circle)
+        val s = DinoState(this)
+        val dino = WebView(this).apply {
+            settings.javaScriptEnabled = true
+            setBackgroundColor(Color.TRANSPARENT)
+            isVerticalScrollBarEnabled = false
+            isHorizontalScrollBarEnabled = false
+            loadUrl("file:///android_asset/dino3d.html?type=${android.net.Uri.encode(s.dinoType)}&stage=${s.stage}")
+            contentDescription = "Dino Companion 3D"
         }
         dinoView = dino
 
