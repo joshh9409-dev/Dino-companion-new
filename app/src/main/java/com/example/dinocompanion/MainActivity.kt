@@ -6,6 +6,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.animation.ObjectAnimator
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -13,9 +16,9 @@ import androidx.core.content.ContextCompat
 import com.example.dinocompanion.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var state: DinoState
+    private var dinoAnimator: ObjectAnimator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +33,20 @@ class MainActivity : AppCompatActivity() {
         wireSettings()
         render()
         showPage(binding.pageHome)
+        startDinoAnimation()
     }
 
     override fun onResume() {
         super.onResume()
-        if (::binding.isInitialized && ::state.isInitialized) render()
+        if (::binding.isInitialized && ::state.isInitialized) {
+            render()
+            startDinoAnimation()
+        }
+    }
+
+    override fun onPause() {
+        dinoAnimator?.cancel()
+        super.onPause()
     }
 
     private fun wireNavigation() {
@@ -58,36 +70,34 @@ class MainActivity : AppCompatActivity() {
         binding.btnRename.setOnClickListener { renameDino() }
         binding.btnRenameDino.setOnClickListener { renameDino() }
         binding.btnOverlay.setOnClickListener { toggleOverlay() }
+        binding.imgHomeDino.setOnClickListener { dinoReaction("Your Dino is happy to see you!") }
+        binding.imgDinoPage.setOnClickListener { dinoReaction("Raaawr! That tickles.") }
     }
 
     private fun wireCare() {
         binding.careFeed.setOnClickListener {
             state.hunger += 12f
             state.happiness += 3f
-            state.xp += 25
-            toast("Yum! ${state.dinoName} loved the food.")
-            render()
+            gainXp(25)
+            dinoReaction("Yum! ${state.dinoName} loved the food.")
         }
         binding.carePlay.setOnClickListener {
             state.happiness += 12f
             state.hunger -= 3f
             state.energy -= 5f
-            state.xp += 30
-            toast("${state.dinoName} had a great time!")
-            render()
+            gainXp(30)
+            dinoReaction("${state.dinoName} had a great time!")
         }
         binding.careClean.setOnClickListener {
             state.cleanliness += 15f
-            state.xp += 20
-            toast("${state.dinoName} is sparkling clean.")
-            render()
+            gainXp(20)
+            dinoReaction("${state.dinoName} is sparkling clean.")
         }
         binding.careSleep.setOnClickListener {
             state.energy += 20f
             state.happiness += 3f
-            state.xp += 15
-            toast("${state.dinoName} had a nice nap.")
-            render()
+            gainXp(15)
+            dinoReaction("${state.dinoName} had a nice nap.")
         }
     }
 
@@ -106,25 +116,16 @@ class MainActivity : AppCompatActivity() {
         binding.shopEpicEgg.setOnClickListener { buyItem("Epic Egg", 500) }
         binding.shopCoins.setOnClickListener {
             state.coins += 500
-            toast("+500 coins added to your Dino wallet.")
-            render()
+            dinoReaction("+500 coins added to your Dino wallet.")
         }
     }
 
     private fun wireSettings() {
         binding.settingOverlay.setOnClickListener { toggleOverlay() }
-        binding.settingNotifications.setOnClickListener {
-            toast("Notifications are enabled for Dino reactions.")
-        }
-        binding.settingBattery.setOnClickListener {
-            toggleText(binding.settingBattery, "Battery reactions")
-        }
-        binding.settingKeyboard.setOnClickListener {
-            toggleText(binding.settingKeyboard, "Keyboard companion")
-        }
-        binding.settingSound.setOnClickListener {
-            toggleText(binding.settingSound, "Sound & voice")
-        }
+        binding.settingNotifications.setOnClickListener { dinoReaction("Notifications are enabled for Dino reactions.") }
+        binding.settingBattery.setOnClickListener { toggleText(binding.settingBattery, "Battery reactions") }
+        binding.settingKeyboard.setOnClickListener { toggleText(binding.settingKeyboard, "Keyboard companion") }
+        binding.settingSound.setOnClickListener { toggleText(binding.settingSound, "Sound & voice") }
     }
 
     private fun toggleText(view: android.widget.TextView, label: String) {
@@ -134,11 +135,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun selectDino(type: String, cost: Int) {
         if (state.dinoType == type) {
-            toast("${state.dinoName} is already your $type.")
+            dinoReaction("${state.dinoName} is already your $type.")
             return
         }
         if (cost > 0 && state.coins < cost) {
-            toast("You need $cost coins to unlock $type.")
+            dinoReaction("You need $cost coins to unlock $type.")
             showPage(binding.pageShop)
             return
         }
@@ -146,20 +147,39 @@ class MainActivity : AppCompatActivity() {
         state.dinoType = type
         state.stage = 1
         state.xp = 0
-        toast("$type selected! Welcome to your new companion.")
+        dinoReaction("$type selected! Welcome to your new companion.")
         render()
         showPage(binding.pageDino)
     }
 
     private fun buyItem(name: String, cost: Int) {
         if (state.coins < cost) {
-            toast("Not enough coins for $name.")
+            dinoReaction("Not enough coins for $name.")
             return
         }
         state.coins -= cost
-        state.xp += 10
-        toast("$name purchased.")
+        gainXp(10)
+        dinoReaction("$name purchased.")
+    }
+
+    private fun gainXp(amount: Int) {
+        val oldStage = state.stage
+        state.xp += amount
+        state.stage = (state.xp / 1000 + 1).coerceAtMost(4)
         render()
+
+        if (state.stage > oldStage) {
+            binding.imgHomeDino.animate()
+                .scaleX(1.18f).scaleY(1.18f).setDuration(260)
+                .withEndAction {
+                    binding.imgHomeDino.animate().scaleX(1f).scaleY(1f).setDuration(260).start()
+                }.start()
+            AlertDialog.Builder(this)
+                .setTitle("Dino evolved!")
+                .setMessage("${state.dinoName} reached Stage ${state.stage}. Your companion has grown stronger.")
+                .setPositiveButton("Awesome!", null)
+                .show()
+        }
     }
 
     private fun renameDino() {
@@ -170,7 +190,6 @@ class MainActivity : AppCompatActivity() {
             selectAll()
             setPadding(28, 12, 28, 12)
         }
-
         AlertDialog.Builder(this)
             .setTitle("Rename your Dino")
             .setMessage("Give your companion a name.")
@@ -181,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                 if (name.isNotEmpty()) {
                     state.dinoName = name
                     render()
-                    toast("Your Dino is now $name.")
+                    dinoReaction("Your Dino is now $name.")
                 }
             }
             .show()
@@ -189,84 +208,66 @@ class MainActivity : AppCompatActivity() {
 
     private fun toggleOverlay() {
         if (!Settings.canDrawOverlays(this)) {
-            startActivity(
-                Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:$packageName")
-                )
-            )
-            toast("Allow Dino Companion to appear over other apps, then return here.")
+            startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
+            dinoReaction("Allow Dino Companion to appear over other apps, then return here.")
             return
         }
-
         if (state.overlayEnabled) {
             stopService(Intent(this, DinoOverlayService::class.java))
             state.overlayEnabled = false
-            toast("Floating Dino hidden.")
+            dinoReaction("Floating Dino hidden.")
         } else {
-            if (Build.VERSION.SDK_INT >= 33) {
-                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 42)
-            }
-            ContextCompat.startForegroundService(
-                this,
-                Intent(this, DinoOverlayService::class.java)
-            )
+            if (Build.VERSION.SDK_INT >= 33) requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 42)
+            ContextCompat.startForegroundService(this, Intent(this, DinoOverlayService::class.java))
             state.overlayEnabled = true
-            toast("Floating Dino is now on.")
+            dinoReaction("Floating Dino is now on.")
         }
         render()
     }
 
-    private fun showPage(page: android.view.View) {
-        binding.pageHome.visibility = android.view.View.GONE
-        binding.pageDino.visibility = android.view.View.GONE
-        binding.pageCare.visibility = android.view.View.GONE
-        binding.pageShop.visibility = android.view.View.GONE
-        binding.pageSettings.visibility = android.view.View.GONE
-        page.visibility = android.view.View.VISIBLE
+    private fun showPage(page: View) {
+        binding.pageHome.visibility = View.GONE
+        binding.pageDino.visibility = View.GONE
+        binding.pageCare.visibility = View.GONE
+        binding.pageShop.visibility = View.GONE
+        binding.pageSettings.visibility = View.GONE
+        page.visibility = View.VISIBLE
         binding.scroll.scrollTo(0, 0)
-
         val active = when (page) {
             binding.pageDino -> binding.navDino
             binding.pageCare -> binding.navCare
             binding.pageShop -> binding.navShop
             else -> binding.navHome
         }
-        val navs = listOf(binding.navHome, binding.navDino, binding.navCare, binding.navShop)
-        navs.forEach { it.alpha = if (it == active) 1f else 0.55f }
+        listOf(binding.navHome, binding.navDino, binding.navCare, binding.navShop)
+            .forEach { it.alpha = if (it == active) 1f else 0.55f }
     }
 
     private fun render() {
-        val evolution = (state.xp % 1000) / 10
+        val progress = (state.xp % 1000) / 10
         val stageName = when (state.stage) {
             1 -> "Baby"
             2 -> "Young"
             3 -> "Adult"
             else -> "Legendary"
         }
-
         binding.txtDinoName.text = state.dinoName
         binding.txtDinoType.text = "${state.dinoType} • $stageName"
-        binding.txtStage.text = "Stage ${state.stage} • $evolution% to next evolution"
+        binding.txtStage.text = if (state.stage >= 4) "Stage 4 • Legendary companion" else "Stage ${state.stage} • $progress% to next evolution"
         binding.txtXp.text = "${state.xp} XP"
         binding.txtCoins.text = "● ${state.coins}"
         binding.txtCoinsShop.text = "● ${state.coins}"
-
-        binding.progressEvolution.progress = evolution
+        binding.progressEvolution.progress = progress
         binding.progressHunger.progress = state.hunger.toInt()
         binding.progressHappiness.progress = state.happiness.toInt()
         binding.progressClean.progress = state.cleanliness.toInt()
-
         binding.txtHunger.text = "Hunger     ${state.hunger.toInt()}%"
         binding.txtHappiness.text = "Happiness  ${state.happiness.toInt()}%"
         binding.txtClean.text = "Cleanliness ${state.cleanliness.toInt()}%"
-
         binding.txtDinoPageName.text = state.dinoName
         binding.txtDinoPageType.text = "${state.dinoType} • Stage ${state.stage}"
         binding.txtCareGreeting.text = "${state.dinoName} is waiting for you!"
-        binding.settingOverlay.text =
-            "Floating Dino     ${if (state.overlayEnabled) "ON" else "OFF"}"
-
+        binding.settingOverlay.text = "Floating Dino     ${if (state.overlayEnabled) "ON" else "OFF"}"
         val type = state.dinoType
         binding.selectTRex.text = "🦖\nT-Rex\n${if (type == "T-Rex") "Selected" else "300 coins"}"
         binding.selectTriceratops.text = "🦕\nTriceratops\n${if (type == "Triceratops") "Selected" else "300 coins"}"
@@ -274,7 +275,23 @@ class MainActivity : AppCompatActivity() {
         binding.selectStego.text = "🦕\nStegosaurus\n${if (type == "Stegosaurus") "Selected" else "700 coins"}"
     }
 
-    private fun toast(message: String) {
+    private fun startDinoAnimation() {
+        dinoAnimator?.cancel()
+        dinoAnimator = ObjectAnimator.ofFloat(binding.imgHomeDino, View.TRANSLATION_Y, 0f, -8f, 0f).apply {
+            duration = 2400
+            repeatCount = ObjectAnimator.INFINITE
+            interpolator = AccelerateDecelerateInterpolator()
+            start()
+        }
+    }
+
+    private fun dinoReaction(message: String) {
+        binding.imgHomeDino.animate().rotationBy(7f).setDuration(100).withEndAction {
+            binding.imgHomeDino.animate().rotationBy(-14f).setDuration(180).withEndAction {
+                binding.imgHomeDino.animate().rotation(0f).setDuration(100).start()
+            }.start()
+        }.start()
         android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
+        render()
     }
 }
