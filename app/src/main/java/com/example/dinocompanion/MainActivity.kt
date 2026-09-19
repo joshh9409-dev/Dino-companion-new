@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.graphics.Color
+import android.webkit.WebView
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.animation.ObjectAnimator
 import android.widget.EditText
@@ -71,6 +73,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnRename.setOnClickListener { renameDino() }
         binding.btnRenameDino.setOnClickListener { renameDino() }
         binding.btnOverlay.setOnClickListener { toggleOverlay() }
+        configure3dView(binding.imgHomeDino)
+        configure3dView(binding.imgDinoPage)
         binding.imgHomeDino.setOnClickListener { dinoReaction("Your Dino is happy to see you!") }
         binding.imgDinoPage.setOnClickListener { dinoReaction("Raaawr! That tickles.") }
     }
@@ -289,20 +293,22 @@ class MainActivity : AppCompatActivity() {
         binding.selectStego.text = "🦕\nStegosaurus\n${if (type == "Stegosaurus") "Selected" else "700 coins"}"
     }
 
-    private fun setDinoArt(view: android.widget.ImageView) {
-        view.setImageResource(
-            when (state.dinoType) {
-                "Triceratops" -> R.drawable.dino_triceratops
-                "Pterodactyl" -> R.drawable.dino_pterodactyl
-                "Stegosaurus" -> R.drawable.dino_stegosaurus
-                else -> R.drawable.dino_trex
-            }
-        )
+    private fun configure3dView(view: WebView) {
+        view.settings.javaScriptEnabled = true
+        view.settings.domStorageEnabled = false
+        view.setBackgroundColor(Color.TRANSPARENT)
+        view.isVerticalScrollBarEnabled = false
+        view.isHorizontalScrollBarEnabled = false
+    }
+
+    private fun setDinoArt(view: WebView) {
+        val type = Uri.encode(state.dinoType)
+        view.loadUrl("file:///android_asset/dino3d.html?type=$type&stage=${state.stage}")
         val scale = when (state.stage) {
-            1 -> 0.88f
-            2 -> 0.96f
+            1 -> 0.92f
+            2 -> 0.98f
             3 -> 1.04f
-            else -> 1.12f
+            else -> 1.10f
         }
         view.scaleX = scale
         view.scaleY = scale
