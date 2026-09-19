@@ -99,13 +99,14 @@
                             android:textStyle="bold"/>
                     </LinearLayout>
 
-                    <ImageView
+                    <WebView
                         android:id="@+id/imgHomeDino"
                         android:layout_width="205dp"
                         android:layout_height="205dp"
                         android:layout_marginTop="4dp"
-                        android:contentDescription="Your dinosaur"
-                        android:src="@drawable/dino_placeholder"/>
+                        android:background="@android:color/transparent"
+                        android:overScrollMode="never"
+                        android:scrollbars="none"/>
 
                     <TextView
                         android:id="@+id/txtDinoName"
