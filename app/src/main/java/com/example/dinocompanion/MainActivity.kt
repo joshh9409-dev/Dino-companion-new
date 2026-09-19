@@ -251,6 +251,8 @@ class MainActivity : AppCompatActivity() {
             3 -> "Adult"
             else -> "Legendary"
         }
+        setDinoArt(binding.imgHomeDino)
+        setDinoArt(binding.imgDinoPage)
         binding.txtDinoName.text = state.dinoName
         binding.txtDinoType.text = "${state.dinoType} • $stageName"
         binding.txtStage.text = if (state.stage >= 4) "Stage 4 • Legendary companion" else "Stage ${state.stage} • $progress% to next evolution"
@@ -273,6 +275,25 @@ class MainActivity : AppCompatActivity() {
         binding.selectTriceratops.text = "🦕\nTriceratops\n${if (type == "Triceratops") "Selected" else "300 coins"}"
         binding.selectPtero.text = "🪽\nPterodactyl\n${if (type == "Pterodactyl") "Selected" else "500 coins"}"
         binding.selectStego.text = "🦕\nStegosaurus\n${if (type == "Stegosaurus") "Selected" else "700 coins"}"
+    }
+
+    private fun setDinoArt(view: android.widget.ImageView) {
+        view.setImageResource(
+            when (state.dinoType) {
+                "Triceratops" -> R.drawable.dino_triceratops
+                "Pterodactyl" -> R.drawable.dino_pterodactyl
+                "Stegosaurus" -> R.drawable.dino_stegosaurus
+                else -> R.drawable.dino_trex
+            }
+        )
+        val scale = when (state.stage) {
+            1 -> 0.88f
+            2 -> 0.96f
+            3 -> 1.04f
+            else -> 1.12f
+        }
+        view.scaleX = scale
+        view.scaleY = scale
     }
 
     private fun startDinoAnimation() {
