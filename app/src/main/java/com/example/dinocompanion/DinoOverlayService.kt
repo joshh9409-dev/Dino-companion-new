@@ -67,7 +67,14 @@ class DinoOverlayService : Service() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         val root = FrameLayout(this).apply { setPadding(4, 4, 4, 4) }
         val dino = ImageView(this).apply {
-            setImageResource(R.drawable.dino_placeholder)
+            setImageResource(
+                when (DinoState(this@DinoOverlayService).dinoType) {
+                    "Triceratops" -> R.drawable.dino_triceratops
+                    "Pterodactyl" -> R.drawable.dino_pterodactyl
+                    "Stegosaurus" -> R.drawable.dino_stegosaurus
+                    else -> R.drawable.dino_trex
+                }
+            )
             contentDescription = "Dino Companion"
             setPadding(7, 7, 7, 7)
             setBackgroundResource(R.drawable.bg_bubble_circle)
