@@ -354,12 +354,13 @@ Settings"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">
-                    <ImageView
+                    <WebView
                         android:id="@+id/imgDinoPage"
                         android:layout_width="210dp"
                         android:layout_height="210dp"
-                        android:src="@drawable/dino_placeholder"
-                        android:contentDescription="Selected dinosaur"/>
+                        android:background="@android:color/transparent"
+                        android:overScrollMode="never"
+                        android:scrollbars="none"/>
                     <TextView
                         android:id="@+id/txtDinoPageName"
                         android:layout_width="wrap_content"
